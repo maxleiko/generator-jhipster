@@ -21,7 +21,6 @@ const chalk = require('chalk');
 const shelljs = require('shelljs');
 const util = require('util');
 const prompts = require('./prompts');
-const writeFiles = require('./files').writeFiles;
 const BaseGenerator = require('../generator-base');
 const docker = require('../docker-base');
 
@@ -46,11 +45,6 @@ module.exports = KubernetesGenerator.extend({
     },
 
     initializing: {
-        sayHello() {
-            this.log(chalk.white(`${chalk.bold('⎈')} Welcome to the JHipster Kubernetes Generator ${chalk.bold('⎈')}`));
-            this.log(chalk.white(`Files will be generated in folder: ${chalk.yellow(this.destinationRoot())}`));
-        },
-
         checkDocker: docker.checkDocker,
 
         checkKubernetes() {
@@ -166,8 +160,6 @@ module.exports = KubernetesGenerator.extend({
             this.config.set('ingressDomain', this.ingressDomain);
         }
     },
-
-    writing: writeFiles(),
 
     end() {
         if (this.warning) {

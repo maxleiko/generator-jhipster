@@ -24,7 +24,6 @@ const shelljs = require('shelljs');
 const pluralize = require('pluralize');
 const prompts = require('./prompts');
 const jhiCore = require('jhipster-core');
-const writeFiles = require('./files').writeFiles;
 const BaseGenerator = require('../generator-base');
 const constants = require('../generator-constants');
 
@@ -727,8 +726,6 @@ module.exports = EntityGenerator.extend({
             insight.track('entity/fluentMethods', this.fluentMethods);
         }
     },
-
-    writing: writeFiles(),
 
     install: {
         afterRunHook() {

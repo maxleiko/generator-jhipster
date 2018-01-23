@@ -45,11 +45,6 @@ module.exports = ExportJDLGenerator.extend({
         }
     },
 
-    writing() {
-        const content = `// JDL definition for application '${this.baseName}' generated with command 'jhipster export-jdl'\n\n${this.jdl.toString()}`;
-        this.fs.write(this.jdlFile, content);
-    },
-
     end() {
         this.log(chalk.green.bold('\nEntities successfully exported to JDL file\n'));
     }

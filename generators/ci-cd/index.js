@@ -65,11 +65,6 @@ module.exports = PipelineGenerator.extend({
         askIntegrations: prompts.askIntegrations
     },
     configuring: {
-        insight() {
-            if (this.abort) return;
-            const insight = this.insight();
-            insight.trackWithEvent('generator', 'ci-cd');
-        },
         setTemplateconstiables() {
             if (this.abort || this.jenkinsIntegrations === undefined) return;
             this.gitLabIndent = this.jenkinsIntegrations.includes('gitlab') ? '    ' : '';
@@ -77,25 +72,5 @@ module.exports = PipelineGenerator.extend({
             this.indent += this.gitLabIndent;
         }
     },
-
-    writing() {
-        if (this.pipelines.includes('jenkins')) {
-            this.template('jenkins/_Jenkinsfile', 'Jenkinsfile');
-            this.template('jenkins/_jenkins.yml', `${this.DOCKER_DIR}jenkins.yml`);
-            this.template('jenkins/idea.gdsl', `${this.SERVER_MAIN_RES_DIR}idea.gdsl`);
-            if (this.jenkinsIntegrations.includes('publishDocker')) {
-                this.template('_docker-registry.yml', `${this.DOCKER_DIR}docker-registry.yml`);
-            }
-        }
-        if (this.pipelines.includes('gitlab')) {
-            this.template('_.gitlab-ci.yml', '.gitlab-ci.yml');
-        }
-        if (this.pipelines.includes('circle')) {
-            this.template('_circle.yml', 'circle.yml');
-        }
-        if (this.pipelines.includes('travis')) {
-            this.template('_travis.yml', '.travis.yml');
-        }
-    }
 
 });

@@ -3,7 +3,6 @@ const chalk = require('chalk');
 const shelljs = require('shelljs');
 const util = require('util');
 const prompts = require('./prompts');
-const writeFiles = require('./files').writeFiles;
 const BaseGenerator = require('../generator-base');
 const docker = require('../docker-base');
 
@@ -155,8 +154,6 @@ module.exports = OpenShiftGenerator.extend({
             this.config.set('registryReplicas', this.registryReplicas);
         }
     },
-
-    writing: writeFiles(),
 
     end() {
         if (this.warning) {

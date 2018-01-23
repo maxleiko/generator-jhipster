@@ -22,7 +22,6 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const prompts = require('./prompts');
 const BaseGenerator = require('../generator-base');
-const writeFiles = require('./files').writeFiles;
 const packagejs = require('../../package.json');
 const crypto = require('crypto');
 const os = require('os');
@@ -421,8 +420,6 @@ module.exports = JhipsterServerGenerator.extend({
             this.composeLanguagesSub(this, this.configOptions, 'server');
         }
     },
-
-    writing: writeFiles(),
 
     end() {
         if (this.prodDatabaseType === 'oracle') {

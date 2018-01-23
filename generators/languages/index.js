@@ -132,11 +132,6 @@ module.exports = LanguagesGenerator.extend({
     },
 
     default: {
-        insight() {
-            const insight = this.insight();
-            insight.trackWithEvent('generator', 'languages');
-        },
-
         getSharedConfigOptions() {
             if (configOptions.applicationType) {
                 this.applicationType = configOptions.applicationType;
@@ -182,26 +177,4 @@ module.exports = LanguagesGenerator.extend({
             }
         }
     },
-
-    writing() {
-        const insight = this.insight();
-        this.languagesToApply.forEach((language) => {
-            if (!this.skipClient) {
-                this.installI18nClientFilesByLanguage(this, constants.CLIENT_MAIN_SRC_DIR, language);
-            }
-            if (!this.skipServer) {
-                this.installI18nServerFilesByLanguage(this, constants.SERVER_MAIN_RES_DIR, language);
-            }
-            insight.track('languages/language', language);
-        });
-        if (!this.skipClient) {
-            this.updateLanguagesInLanguagePipe(this.config.get('languages'));
-            if (this.clientFramework === 'angular1') {
-                this.updateLanguagesInLanguageConstant(this.config.get('languages'));
-            } else {
-                this.updateLanguagesInLanguageConstantNG2(this.config.get('languages'));
-                this.updateLanguagesInWebpack(this.config.get('languages'));
-            }
-        }
-    }
 });

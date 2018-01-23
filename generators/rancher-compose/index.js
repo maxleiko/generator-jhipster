@@ -22,7 +22,6 @@ const jsyaml = require('js-yaml');
 const pathjs = require('path');
 const util = require('util');
 const prompts = require('./prompts');
-const writeFiles = require('./files').writeFiles;
 const BaseGenerator = require('../generator-base');
 const docker = require('../docker-base');
 
@@ -268,8 +267,6 @@ module.exports = RancherGenerator.extend({
             this.config.set('enableRancherLoadBalancing', this.enableRancherLoadBalancing);
         }
     },
-
-    writing: writeFiles(),
 
     end() {
         if (this.warning) {

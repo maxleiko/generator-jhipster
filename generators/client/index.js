@@ -22,8 +22,6 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const BaseGenerator = require('../generator-base');
 const prompts = require('./prompts');
-const writeAngularFiles = require('./files-angular').writeFiles;
-const writeAngularJsFiles = require('./files-angularjs').writeFiles;
 const packagejs = require('../../package.json');
 const constants = require('../generator-constants');
 
@@ -359,65 +357,4 @@ module.exports = JhipsterClientGenerator.extend({
             this.composeLanguagesSub(this, this.configOptions, 'client');
         }
     },
-
-    writing() {
-        if (this.clientFramework === 'angular1') {
-            return writeAngularJsFiles.call(this);
-        }
-        return writeAngularFiles.call(this);
-    },
-
-    install() {
-        let logMsg =
-            `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install`)}`;
-
-        if (this.clientFramework === 'angular1') {
-            logMsg =
-                `To install your dependencies manually, run: ${chalk.yellow.bold(`${this.clientPackageManager} install & bower install`)}`;
-        }
-
-        const injectDependenciesAndConstants = (err) => {
-            if (err) {
-                this.warning('Install of dependencies failed!');
-                this.log(logMsg);
-            } else if (this.clientFramework === 'angular1') {
-                this.spawnCommandSync('gulp', ['install']);
-            } else {
-                this.spawnCommandSync(this.clientPackageManager, ['run', 'webpack:build']);
-            }
-        };
-
-        const installConfig = {
-            bower: this.clientFramework === 'angular1',
-            npm: this.clientPackageManager !== 'yarn',
-            yarn: this.clientPackageManager === 'yarn',
-            callback: injectDependenciesAndConstants
-        };
-
-        if (this.options['skip-install']) {
-            this.log(logMsg);
-        } else {
-            this.installDependencies(installConfig);
-        }
-    },
-
-    end() {
-        this.log(chalk.green.bold('\nClient application generated successfully.\n'));
-
-        let logMsg =
-            `Start your Webpack development server with:\n ${chalk.yellow.bold(`${this.clientPackageManager} start`)}\n`;
-
-        if (this.clientFramework === 'angular1') {
-            logMsg =
-                'Inject your front end dependencies into your source code:\n' +
-                ` ${chalk.yellow.bold('gulp inject')}\n\n` +
-                'Generate the AngularJS constants:\n' +
-                ` ${chalk.yellow.bold('gulp ngconstant:dev')}` +
-                `${this.useSass ? '\n\nCompile your Sass style sheets:\n\n' +
-                `${chalk.yellow.bold('gulp sass')}` : ''}\n\n` +
-                'Or do all of the above:\n' +
-                ` ${chalk.yellow.bold('gulp install')}\n`;
-        }
-        this.log(chalk.green(logMsg));
-    }
 });

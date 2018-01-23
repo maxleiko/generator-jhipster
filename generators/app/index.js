@@ -20,7 +20,6 @@ const util = require('util');
 const generator = require('yeoman-generator');
 const chalk = require('chalk');
 const BaseGenerator = require('../generator-base');
-const cleanup = require('../cleanup');
 const prompts = require('./prompts');
 const packagejs = require('../../package.json');
 const constants = require('../generator-constants');
@@ -115,42 +114,6 @@ module.exports = JhipsterGenerator.extend({
     },
 
     initializing: {
-        displayLogo() {
-            this.printJHipsterLogo();
-        },
-
-        checkJava() {
-            this.checkJava();
-        },
-
-        checkNode() {
-            this.checkNode();
-        },
-
-        checkGit() {
-            this.checkGit();
-        },
-
-        checkGitConnection() {
-            this.checkGitConnection();
-        },
-
-        checkYarn() {
-            this.checkYarn();
-        },
-
-        checkForNewVersion() {
-            if (!this.skipChecks) {
-                this.checkForNewVersion();
-            }
-        },
-
-        validate() {
-            if (this.skipServer && this.skipClient) {
-                this.error(chalk.red(`You can not pass both ${chalk.yellow('--skip-client')} and ${chalk.yellow('--skip-server')} together`));
-            }
-        },
-
         setupconsts() {
             this.applicationType = this.config.get('applicationType');
             if (!this.applicationType) {
@@ -267,15 +230,6 @@ module.exports = JhipsterGenerator.extend({
             this.configOptions.clientPackageManager = this.clientPackageManager;
         },
 
-        insight() {
-            const insight = this.insight();
-            insight.trackWithEvent('generator', 'app');
-            insight.track('app/applicationType', this.applicationType);
-            insight.track('app/testFrameworks', this.testFrameworks);
-            insight.track('app/otherModules', this.otherModules);
-            insight.track('app/clientPackageManager', this.clientPackageManager);
-        },
-
         composeLanguages() {
             if (this.skipI18n) return;
             this.composeLanguagesSub(this, this.configOptions, this.generatorType);
@@ -301,10 +255,6 @@ module.exports = JhipsterGenerator.extend({
     },
 
     writing: {
-        cleanup() {
-            cleanup.cleanupOldFiles(this, this.javaDir, this.testDir);
-        },
-
         regenerateEntities() {
             if (this.withEntities) {
                 this.getExistingEntities().forEach((entity) => {
@@ -321,27 +271,6 @@ module.exports = JhipsterGenerator.extend({
     },
 
     end: {
-        localInstall() {
-            if (this.skipClient) {
-                if (this.otherModules === undefined) {
-                    this.otherModules = [];
-                }
-                // Generate a package.json file containing the current version
-                // of the generator as dependency
-                this.template('_skipClientApp.package.json', 'package.json');
-
-                if (!this.options['skip-install']) {
-                    if (this.clientPackageManager === 'yarn') {
-                        this.log(chalk.bold(`\nInstalling generator-jhipster@${this.jhipsterVersion} locally using yarn`));
-                        this.spawnCommand('yarn', ['install']);
-                    } else if (this.clientPackageManager === 'npm') {
-                        this.log(chalk.bold(`\nInstalling generator-jhipster@${this.jhipsterVersion} locally using npm`));
-                        this.npmInstall();
-                    }
-                }
-            }
-        },
-
         afterRunHook() {
             try {
                 const modules = this.getModuleHooks();
